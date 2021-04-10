@@ -1,3 +1,5 @@
+import IDoor from './IDoor'
+
 const defaultStructure = {
   width: 0,
   depth: 0,
@@ -14,8 +16,13 @@ const defaultCoords = {
 export default class IWall {
   component = 'Wall'
   builderType = 'buildWall'
+  fixtures = null
 
-  constructor(structure = defaultStructure, coords = defaultCoords) {
+  constructor(
+    structure = defaultStructure,
+    coords = defaultCoords,
+    fixture = null
+  ) {
     const { width, depth, height, color } = structure
     const { x = 0, y = 0, z = null } = coords
 
@@ -30,5 +37,13 @@ export default class IWall {
       y,
       z,
     }
+
+    this.fixture = fixture
+  }
+
+  static withDoor(structure, coords, door) {
+    const fixture = new IDoor(door)
+
+    return new IWall(structure, coords, fixture)
   }
 }

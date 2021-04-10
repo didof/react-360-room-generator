@@ -65,7 +65,7 @@ class Builder {
           break
         default:
           console.error(
-            `[buildFloor/buildPerimeter] The ${el.component} is not recognized`
+            `[Builder/_buildFloorPerimeter] The ${el.component} is not recognized`
           )
       }
     })
@@ -76,15 +76,23 @@ class Builder {
       case 'AB':
         if (!wall.structure.width) wall.structure.width = this.roomWidth
         if (!wall.structure.depth) wall.structure.depth = this.wallsThickness
+        break
       case 'BC':
         if (!wall.structure.width) wall.structure.width = this.wallsThickness
         if (!wall.structure.depth) wall.structure.depth = -this.roomDepth
+        break
       case 'CD':
         if (!wall.structure.width) wall.structure.width = -this.roomWidth
         if (!wall.structure.depth) wall.structure.depth = this.wallsThickness
+        break
       case 'DA':
         if (!wall.structure.width) wall.structure.width = this.wallsThickness
         if (!wall.structure.depth) wall.structure.depth = this.roomDepth
+        break
+      default:
+        console.error(
+          `[Builder/calculatePerimeterWallStructure] The side ${side} is not recognized`
+        )
     }
     wall.structure.height = this.wallsHeight
   }
@@ -107,6 +115,23 @@ class Builder {
   }
 
   buildWall(i) {
+    if (!i.fixture) {
+      this._buildWallSimple(i)
+      return
+    }
+
+    switch (i.fixture.category) {
+      case 'IDoor':
+        this._buildWallWithDoor(i)
+        break
+      default:
+        console.error(
+          `[Builder/buildWall] The component ${el.component} is not recognized`
+        )
+    }
+  }
+
+  _buildWallSimple(i) {
     const { structure, coords } = i
     let X = coords.x - this.roomWidth / 2 + structure.width / 2
     let Y = coords.y - this.roomDepth / 2 - structure.depth / 2
@@ -115,6 +140,30 @@ class Builder {
     const location = new Location([X, Z, Y])
 
     this._render(i, location)
+  }
+
+  _buildWallWithDoor(i) {
+    switch (fixture.type) {
+      case 'Empty':
+        this._buildWallWithDoorEmpty(i)
+
+        break
+      default:
+        console.error(
+          `[Builder/_buildWallWithDoor] The door type ${fixture.type} is not recognized`
+        )
+    }
+  }
+
+  _buildWallWithDoorEmpty({ structure, coords, fixture }) {
+    console.log(structure, coords, fixture)
+
+    let discriminantLength
+
+    const walls = []
+    if (!door.distanceFromWallOrigin) {
+      // door.distanceFromWallOrigin =
+    }
   }
 }
 

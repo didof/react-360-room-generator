@@ -7,8 +7,11 @@ const floor = new IFloor(
     color: '#aaa',
   },
   {
-    AB: new IWall(),
-    BC: new IWall(),
+    AB: IWall.withDoor(),
+    BC: new IWall({
+      color: '#bbb',
+      depth: -30,
+    }),
     CD: new IWall(),
     DA: new IWall(),
   }
@@ -22,15 +25,12 @@ const standaloneWall = new IWall(
     color: '#ccc',
   },
   {
-    x: 25,
+    x: 45,
     y: 10,
   }
 )
 
 export default {
   name: 'room1',
-  components: [
-    floor,
-    // standaloneWall
-  ],
+  components: [floor, standaloneWall],
 }
