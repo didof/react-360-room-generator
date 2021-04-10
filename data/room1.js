@@ -1,9 +1,5 @@
 import { IFloor, IWall } from './interfaces'
 
-const wallAB = new IWall()
-// const perimeterEastWall = new IWall()
-const wallCD = new IWall()
-// const perimeterWestWall = new IWall()
 const floor = new IFloor(
   {
     width: 75,
@@ -11,10 +7,10 @@ const floor = new IFloor(
     color: '#aaa',
   },
   {
-    AB: wallAB,
-    // BC: perimeterEastWall,
-    CD: wallCD,
-    // DA: perimeterWestWall,
+    AB: new IWall(),
+    BC: new IWall(),
+    CD: new IWall(),
+    DA: new IWall(),
   }
 )
 
