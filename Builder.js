@@ -1,4 +1,5 @@
 import { Location } from 'react-360-web'
+import IWall from './data/interfaces/IWall'
 
 const defaultBuilderOptions = {
   floorLevel: -10,
@@ -35,6 +36,17 @@ class Builder {
       }),
       location
     )
+  }
+
+  _renderWallSimple(i) {
+    const { structure, coords } = i
+    let X = coords.x - this.roomWidth / 2 + structure.width / 2
+    let Y = coords.y - this.roomDepth / 2 - structure.depth / 2
+    let Z = coords.z - this.floorLevel / 2 - structure.height / 2
+
+    const location = new Location([X, Z, Y])
+
+    this._render(i, location)
   }
 
   _setRoomSizez({ width, depth }) {
@@ -116,7 +128,7 @@ class Builder {
 
   buildWall(i) {
     if (!i.fixture) {
-      this._buildWallSimple(i)
+      this._renderWallSimple(i)
       return
     }
 
@@ -131,19 +143,8 @@ class Builder {
     }
   }
 
-  _buildWallSimple(i) {
-    const { structure, coords } = i
-    let X = coords.x - this.roomWidth / 2 + structure.width / 2
-    let Y = coords.y - this.roomDepth / 2 - structure.depth / 2
-    let Z = coords.z - this.floorLevel / 2 - structure.height / 2
-
-    const location = new Location([X, Z, Y])
-
-    this._render(i, location)
-  }
-
   _buildWallWithDoor(i) {
-    switch (fixture.type) {
+    switch (i.fixture.type) {
       case 'Empty':
         this._buildWallWithDoorEmpty(i)
 
@@ -158,12 +159,51 @@ class Builder {
   _buildWallWithDoorEmpty({ structure, coords, fixture }) {
     console.log(structure, coords, fixture)
 
-    let discriminantLength
+    let discriminantSize = structure.width > structure.depth ? 'width' : 'depth'
 
-    const walls = []
-    if (!door.distanceFromWallOrigin) {
-      // door.distanceFromWallOrigin =
+    if (!fixture.distanceFromWallOrigin) {
+      let wallSize =
+        discriminantSize === 'width' ? structure.width : structure.depth
+      fixture.distanceFromWallOrigin = wallSize / 2
     }
+
+    const w1Structure = {
+      ...structure,
+      [discriminantSize]:
+        structure[discriminantSize] -
+        fixture.distanceFromWallOrigin -
+        fixture.width,
+    }
+
+    const w1Coords = coords
+
+    const w2Structure = {
+      ...structure,
+      [discriminantSize]:
+        structure[discriminantSize] -
+        (structure[discriminantSize] - fixture.distanceFromWallOrigin) -
+        fixture.width,
+    }
+
+    // todo stesso giochetto del discriminantSize
+    const discriminantCoord = discriminantSize === 'width' ? 'x' : 'y'
+    const w2Coords = {
+      ...coords,
+      [discriminantCoord]:
+        structure[discriminantSize] -
+        fixture.distanceFromWallOrigin +
+        fixture.width,
+    }
+
+    const w1 = new IWall(w1Structure, w1Coords)
+    const w2 = new IWall(w2Structure, w2Coords)
+
+    const walls = [w1, w2]
+    console.log(walls)
+
+    walls.forEach(wall => {
+      this._renderWallSimple(wall)
+    })
   }
 }
 

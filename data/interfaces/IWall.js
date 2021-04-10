@@ -18,11 +18,11 @@ export default class IWall {
   builderType = 'buildWall'
   fixtures = null
 
-  constructor(
-    structure = defaultStructure,
-    coords = defaultCoords,
-    fixture = null
-  ) {
+  constructor(structure, coords, fixture) {
+    if (!structure) structure = defaultStructure
+    if (!coords) coords = defaultCoords
+    if (!fixture) fixture = null
+
     const { width, depth, height, color } = structure
     const { x = 0, y = 0, z = null } = coords
 
