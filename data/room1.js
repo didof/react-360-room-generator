@@ -2,7 +2,7 @@ import { IFloor, IWall } from './interfaces'
 
 const wallAB = new IWall()
 // const perimeterEastWall = new IWall()
-// const perimeterSouthWall = new IWall()
+const wallCD = new IWall()
 // const perimeterWestWall = new IWall()
 const floor = new IFloor(
   {
@@ -13,7 +13,7 @@ const floor = new IFloor(
   {
     AB: wallAB,
     // BC: perimeterEastWall,
-    // CD: perimeterSouthWall,
+    CD: wallCD,
     // DA: perimeterWestWall,
   }
 )
@@ -33,5 +33,8 @@ const standaloneWall = new IWall(
 
 export default {
   name: 'room1',
-  components: [floor, standaloneWall],
+  components: [
+    floor,
+    // standaloneWall
+  ],
 }

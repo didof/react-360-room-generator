@@ -72,12 +72,19 @@ class BuilderAlt {
   }
 
   _calculatePerimeterWallStructure(wall, side) {
-    if (['AB', 'CD'].includes(side)) {
-      if (!wall.structure.width) wall.structure.width = this.roomWidth
-      if (!wall.structure.depth) wall.structure.depth = this.wallsThickness
-    } else {
-      if (!wall.structure.width) wall.structure.width = this.wallsThickness
-      if (!wall.structure.depth) wall.structure.depth = this.roomDepth
+    switch (side) {
+      case 'AB':
+        if (!wall.structure.width) wall.structure.width = this.roomWidth
+        if (!wall.structure.depth) wall.structure.depth = this.wallsThickness
+      case 'CD':
+        if (!wall.structure.width) wall.structure.width = -this.roomWidth
+        if (!wall.structure.depth) wall.structure.depth = this.wallsThickness
+      case 'BC':
+        if (!wall.structure.width) wall.structure.width = this.wallsThickness
+        if (!wall.structure.depth) wall.structure.depth = this.roomDepth
+      case 'DA':
+        if (!wall.structure.width) wall.structure.width = this.wallsThickness
+        if (!wall.structure.depth) wall.structure.depth = -this.roomDepth
     }
     wall.structure.height = this.wallsHeight
   }
@@ -97,69 +104,6 @@ class BuilderAlt {
     this._render(i, location)
 
     this._buildFloorPerimeter(i.perimeter)
-
-    return
-
-    const perimeterWallTickness = 3
-    const perimeterWallHeight = 15
-    const cardinalCoords = {
-      north: {
-        x: this.floor.north,
-        y: this.floor.east,
-        width: i.structure.width,
-        depth: perimeterWallTickness,
-        height: perimeterWallHeight,
-      },
-      east: {
-        x: this.floor.south,
-        y: this.floor.east,
-        width: perimeterWallTickness,
-        depth: i.structure.depth,
-        height: perimeterWallHeight,
-      },
-      south: {
-        x: this.floor.north,
-        y: this.floor.west,
-        width: i.structure.width,
-        depth: perimeterWallTickness,
-        height: perimeterWallHeight,
-      },
-      west: {
-        x: this.floor.north,
-        y: this.floor.east,
-        width: perimeterWallTickness,
-        depth: i.structure.depth,
-        height: perimeterWallHeight,
-      },
-    }
-
-    const { perimeter } = i
-    Object.keys(perimeter).forEach(cardinalPoint => {
-      const el = perimeter[cardinalPoint]
-      if (!el) return
-
-      const directives = cardinalCoords[cardinalPoint]
-
-      switch (el.component) {
-        case 'Wall':
-          if (el.structure.width === 0) el.structure.width = directives.width
-          if (el.structure.depth === 0) el.structure.depth = directives.depth
-          if (el.structure.height === 0) el.structure.height = directives.height
-
-          el.coords.x = directives.x + el.structure.width / 2
-          el.coords.y = directives.y + el.structure.depth / 2
-          el.coords.z = this.floorLevel + el.structure.height / 2
-
-          const location = new Location([el.coords.x, el.coords.z, el.coords.y])
-          this._render(el, location)
-          break
-
-        default:
-          console.error(
-            `[buildFloor/buildPerimeter] The ${el.component} is not recognized`
-          )
-      }
-    })
   }
 
   buildWall(i) {
