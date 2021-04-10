@@ -1,11 +1,12 @@
 import React from 'react'
 import { AppRegistry, View, Box } from 'react-360'
 
-class Floor extends React.Component {
-  constructor({ width, depth, color }) {
+class Wall extends React.Component {
+  constructor({ width, depth, height, color }) {
     super()
     this.width = width
     this.deep = depth
+    this.height = height
     this.color = color
   }
 
@@ -14,7 +15,7 @@ class Floor extends React.Component {
       <View>
         <Box
           dimWidth={this.width}
-          dimHeight={0}
+          dimHeight={this.height}
           dimDepth={this.deep}
           style={{
             color: this.color,
@@ -25,4 +26,4 @@ class Floor extends React.Component {
   }
 }
 
-AppRegistry.registerComponent('Floor', () => Floor)
+AppRegistry.registerComponent('Wall', () => Wall)

@@ -13,8 +13,9 @@ function init(bundle, parent, options = {}) {
   r360.controls.addCameraController(new KeyboardCameraController())
 
   const builder = new RoomBuilder(r360)
-
-  builder.buildFloor(roomData.components.floor)
+  roomData.components.forEach(component => {
+    builder[component.builderType](component)
+  })
 
   r360.renderToSurface(
     r360.createRoot('RoomGenerator', {}),

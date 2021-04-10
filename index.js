@@ -1,6 +1,7 @@
 import React from 'react'
-import { AppRegistry, Text, View, Box } from 'react-360'
+import { AppRegistry, View } from 'react-360'
 import './components/Floor'
+import './components/Wall'
 
 export default class RoomGenerator extends React.Component {
   render() {
