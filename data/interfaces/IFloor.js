@@ -4,20 +4,13 @@ const defaultStructure = {
   color: 'white',
 }
 
-const defaultPerimeter = {
-  north: null,
-  east: null,
-  south: null,
-  west: null,
-}
-
 export default class IFloor {
   component = 'Floor'
   builderType = 'buildFloor'
 
-  constructor(structure = defaultStructure, perimeter = defaultPerimeter) {
+  constructor(structure = defaultStructure, perimeter) {
     const { width, depth, color } = structure
-    const { north = null, east = null, south = null, west = null } = perimeter
+    const { AB = null, BC = null, CD = null, DA = null } = perimeter
 
     this.structure = {
       width,
@@ -26,10 +19,10 @@ export default class IFloor {
     }
 
     this.perimeter = {
-      north,
-      east,
-      south,
-      west,
+      AB,
+      BC,
+      CD,
+      DA,
     }
   }
 }
