@@ -1,5 +1,5 @@
-import { ReactInstance, Location } from 'react-360-web'
-import Builder from './Builder'
+import { ReactInstance } from 'react-360-web'
+import RoomBuilder from './RoomBuilder'
 import KeyboardCameraController from './cameraControllers/KeyboardCameraController'
 
 import roomData from './data/room'
@@ -12,7 +12,9 @@ function init(bundle, parent, options = {}) {
 
   r360.controls.addCameraController(new KeyboardCameraController())
 
-  Builder.buildFloor(r360, roomData.components.floor)
+  const builder = new RoomBuilder(r360)
+
+  builder.buildFloor(roomData.components.floor)
 
   r360.renderToSurface(
     r360.createRoot('RoomGenerator', {}),
