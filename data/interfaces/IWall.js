@@ -1,8 +1,8 @@
 const defaultStructure = {
-  width: 1,
-  depth: 1,
-  height: 1,
-  color: 'red',
+  width: 0,
+  depth: 0,
+  height: 0,
+  color: 'white',
 }
 
 const defaultCoords = {
