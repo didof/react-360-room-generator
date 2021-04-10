@@ -4,11 +4,25 @@ const defaultBuilderOptions = {
   floorLevel: -10,
 }
 
-class Builder {
+class BuilderAlt {
   floorLevel = -10
+  roomWidth = null
+  roomDepth = null
 
   constructor(r360) {
     this.r = r360
+  }
+
+  static buildRoom(r, room, options = defaultBuilderOptions) {
+    if (options) {
+      this.floorLevel = options.floorLevel
+    }
+
+    const builder = new BuilderAlt(r)
+    room.components.forEach(component => {
+      builder[component.builderType](component)
+    })
+    console.info(`[Builder/buildRoom] Room <${room.name}> has been built.`)
   }
 
   _render(i, location) {
@@ -21,32 +35,29 @@ class Builder {
     )
   }
 
-  static buildRoom(r, room, options = defaultBuilderOptions) {
-    if (options) {
-      this.floorLevel = options.floorLevel
-    }
+  _setRoomSizez({ width, depth }) {
+    this.roomWidth = width
+    this.roomDepth = depth
+  }
 
-    const builder = new Builder(r)
-    room.components.forEach(component => {
-      builder[component.builderType](component)
-    })
-    console.info(`[Builder/buildRoom] Room <${room.name}> has been built.`)
+  _buildRoomConstraints({ width, depth }) {
+    this.floorConstraints = {
+      A: [0, 0],
+      B: [width, 0],
+      C: [width, depth],
+      D: [0, depth],
+    }
   }
 
   buildFloor(i) {
     const location = new Location([0, this.floorLevel, 0])
 
-    const halfWidth = i.structure.width / 2
-    const halfDepth = i.structure.depth / 2
-
-    this.floor = {
-      north: -halfDepth,
-      east: -halfWidth,
-      south: halfDepth,
-      west: halfWidth,
-    }
+    this._setRoomSizez(i.structure)
+    this._buildRoomConstraints(i.structure)
 
     this._render(i, location)
+
+    return
 
     const perimeterWallTickness = 3
     const perimeterWallHeight = 15
@@ -111,13 +122,16 @@ class Builder {
   }
 
   buildWall(i) {
-    const { x, y, z } = i.coords
-    let Z = z || this.floorLevel
+    const { x, y, z = this.floorLevel } = i.coords
+    let Z = z / 2
+    let X = x - this.roomWidth / 2
+    let Y = y - this.roomDepth / 2
+    console.log(X, Y, Z)
 
-    const location = new Location([x, Z, y])
+    const location = new Location([X, Z, Y])
 
     this._render(i, location)
   }
 }
 
-export default Builder
+export default BuilderAlt
