@@ -1,6 +1,6 @@
 import { Location } from 'react-360-web'
 
-class RoomBuilder {
+class Builder {
   floorLevel = -10
 
   constructor(r360) {
@@ -15,6 +15,14 @@ class RoomBuilder {
       }),
       location
     )
+  }
+
+  static buildRoom(r, room) {
+    const builder = new Builder(r)
+    room.components.forEach(component => {
+      builder[component.builderType](component)
+    })
+    console.info(`[Builder/buildRoom] Room <${room.name}> has been built.`)
   }
 
   buildFloor(i) {
@@ -33,7 +41,7 @@ class RoomBuilder {
     this._render(i, location)
 
     const perimeterWallTickness = 3
-    const perimeterWallHeight = 20
+    const perimeterWallHeight = 15
     const cardinalCoords = {
       north: {
         x: this.floor.north,
@@ -104,4 +112,4 @@ class RoomBuilder {
   }
 }
 
-export default RoomBuilder
+export default Builder

@@ -1,8 +1,8 @@
 import { ReactInstance } from 'react-360-web'
-import RoomBuilder from './RoomBuilder'
+import Builder from './Builder'
 import KeyboardCameraController from './cameraControllers/KeyboardCameraController'
 
-import roomData from './data/room'
+import room1 from './data/room1'
 
 function init(bundle, parent, options = {}) {
   const r360 = new ReactInstance(bundle, parent, {
@@ -12,10 +12,12 @@ function init(bundle, parent, options = {}) {
 
   r360.controls.addCameraController(new KeyboardCameraController())
 
-  const builder = new RoomBuilder(r360)
-  roomData.components.forEach(component => {
-    builder[component.builderType](component)
-  })
+  Builder.buildRoom(r360, room1)
+
+  // const builder = new Builder(r360)
+  // roomData.components.forEach(component => {
+  //   builder[component.builderType](component)
+  // })
 
   r360.renderToSurface(
     r360.createRoot('RoomGenerator', {}),

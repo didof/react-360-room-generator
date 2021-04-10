@@ -32,6 +32,6 @@ const standaloneWall = new IWall(
 )
 
 export default {
-  name: 'test-room',
+  name: 'room1',
   components: [floor, standaloneWall],
 }
