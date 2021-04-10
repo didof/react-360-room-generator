@@ -32,13 +32,36 @@ class RoomBuilder {
 
     this._render(i, location)
 
+    const perimeterWallTickness = 3
+    const perimeterWallHeight = 20
     const cardinalCoords = {
       north: {
         x: this.floor.north,
         y: this.floor.east,
         width: i.structure.width,
-        depth: 1,
-        height: 20,
+        depth: perimeterWallTickness,
+        height: perimeterWallHeight,
+      },
+      east: {
+        x: this.floor.south,
+        y: this.floor.east,
+        width: perimeterWallTickness,
+        depth: i.structure.depth,
+        height: perimeterWallHeight,
+      },
+      south: {
+        x: this.floor.north,
+        y: this.floor.west,
+        width: i.structure.width,
+        depth: perimeterWallTickness,
+        height: perimeterWallHeight,
+      },
+      west: {
+        x: this.floor.north,
+        y: this.floor.east,
+        width: perimeterWallTickness,
+        depth: i.structure.depth,
+        height: perimeterWallHeight,
       },
     }
 
@@ -56,7 +79,7 @@ class RoomBuilder {
           if (el.structure.height === 0) el.structure.height = directives.height
 
           el.coords.x = directives.x + el.structure.width / 2
-          el.coords.y = directives.y
+          el.coords.y = directives.y + el.structure.depth / 2
           el.coords.z = this.floorLevel + el.structure.height / 2
 
           const location = new Location([el.coords.x, el.coords.z, el.coords.y])

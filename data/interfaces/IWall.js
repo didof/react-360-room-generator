@@ -2,7 +2,7 @@ const defaultStructure = {
   width: 0,
   depth: 0,
   height: 0,
-  color: 'white',
+  color: '#ddd',
 }
 
 const defaultCoords = {
