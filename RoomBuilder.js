@@ -7,41 +7,40 @@ class RoomBuilder {
     this.r = r360
   }
 
-  _render(fragment, location) {
+  _render(i, location) {
     this.r.renderToLocation(
-      this.r.createRoot(fragment.component, {
-        component: fragment.component,
-        ...fragment.structure,
+      this.r.createRoot(i.component, {
+        component: i.component,
+        ...i.structure,
       }),
       location
     )
   }
 
-  buildFloor(fragment) {
+  buildFloor(i) {
+    console.log(i)
     const location = new Location([0, this.floorLevel, 0])
 
-    this._render(fragment, location)
+    this._render(i, location)
 
-    const halfWidth = fragment.structure.width / 2
-    const halfDepth = fragment.structure.depth / 2
+    const halfWidth = i.structure.width / 2
+    const halfDepth = i.structure.depth / 2
 
     this.floor = {
-      front: halfDepth,
-      left: -halfWidth,
-      back: -halfDepth,
-      right: halfWidth,
+      north: halfDepth,
+      east: halfWidth,
+      south: -halfDepth,
+      west: -halfWidth,
     }
   }
 
-  buildWall(fragment) {
-    const { x, y, z } = fragment.coords
+  buildWall(i) {
+    const { x, y, z } = i.coords
     let Z = z || this.floorLevel
 
     const location = new Location([x, Z, y])
 
-    this._render(fragment, location)
-
-    console.log(location)
+    this._render(i, location)
   }
 }
 
