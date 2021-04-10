@@ -7,14 +7,16 @@ const floor = new IFloor(
     color: '#aaa',
   },
   {
-    AB: IWall.withDoor(null, null, { distanceFromWallOrigin: 20 }),
-    // AB: IWall.withDoor(),
+    // AB: IWall.withDoor(null, null, { distanceFromWallOrigin: 20 }),
+    AB: IWall.withDoor(),
+    // BC: IWall.withDoor(),
     // BC: new IWall({
     //   color: '#bbb',
     //   depth: -30,
     // }),
-    // CD: new IWall(),
+    // CD: IWall.withDoor(),
     // DA: new IWall(),
+    // DA: IWall.withDoor(),
   }
 )
 

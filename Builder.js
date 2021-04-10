@@ -9,7 +9,7 @@ class Builder {
   floorLevel = -10
   roomWidth = null
   roomDepth = null
-  wallsThickness = 3
+  wallsThickness = 1
   wallsHeight = 15
 
   constructor(r360) {
@@ -157,22 +157,22 @@ class Builder {
   }
 
   _buildWallWithDoorEmpty({ structure, coords, fixture }) {
-    console.log(structure, coords, fixture)
-
-    let discriminantSize = structure.width > structure.depth ? 'width' : 'depth'
+    let discriminantSize =
+      Math.abs(structure.width) > Math.abs(structure.depth) ? 'width' : 'depth'
+    let wallSize =
+      discriminantSize === 'width'
+        ? Math.abs(structure.width)
+        : Math.abs(structure.depth)
 
     if (!fixture.distanceFromWallOrigin) {
-      let wallSize =
-        discriminantSize === 'width' ? structure.width : structure.depth
       fixture.distanceFromWallOrigin = wallSize / 2
     }
 
     const w1Structure = {
       ...structure,
       [discriminantSize]:
-        structure[discriminantSize] -
-        fixture.distanceFromWallOrigin -
-        fixture.width,
+        wallSize - fixture.distanceFromWallOrigin - fixture.width,
+      color: 'blue',
     }
 
     const w1Coords = coords
@@ -180,26 +180,21 @@ class Builder {
     const w2Structure = {
       ...structure,
       [discriminantSize]:
-        structure[discriminantSize] -
-        (structure[discriminantSize] - fixture.distanceFromWallOrigin) -
-        fixture.width,
+        wallSize - (wallSize - fixture.distanceFromWallOrigin) - fixture.width,
+      color: 'red',
     }
 
-    // todo stesso giochetto del discriminantSize
     const discriminantCoord = discriminantSize === 'width' ? 'x' : 'y'
     const w2Coords = {
       ...coords,
       [discriminantCoord]:
-        structure[discriminantSize] -
-        fixture.distanceFromWallOrigin +
-        fixture.width,
+        wallSize - fixture.distanceFromWallOrigin + fixture.width,
     }
 
     const w1 = new IWall(w1Structure, w1Coords)
     const w2 = new IWall(w2Structure, w2Coords)
 
     const walls = [w1, w2]
-    console.log(walls)
 
     walls.forEach(wall => {
       this._renderWallSimple(wall)
