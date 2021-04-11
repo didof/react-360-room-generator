@@ -168,6 +168,14 @@ class Builder {
       [discriminantSize]:
         wallSize - w1Structure[discriminantSize] - fixture.width,
     }
+    const w3Structure = {
+      ...structure,
+      [discriminantSize]:
+        wallSize -
+        w1Structure[discriminantSize] -
+        w2Structure[discriminantSize],
+      height: -this.floorLevel + 10 - fixture.height,
+    }
 
     const discriminantCoord = discriminantSize === 'width' ? 'x' : 'y'
     const w1Coords = coords
@@ -175,10 +183,16 @@ class Builder {
       ...coords,
       [discriminantCoord]: wallSize - w2Structure[discriminantSize],
     }
+    const w3Coords = {
+      ...coords,
+      [discriminantCoord]: w1Structure[discriminantSize],
+      z: fixture.height,
+    }
 
     const w1 = new IWall(w1Structure, w1Coords)
     const w2 = new IWall(w2Structure, w2Coords)
-    const walls = [w1, w2]
+    const w3 = new IWall(w3Structure, w3Coords)
+    const walls = [w1, w2, w3]
     walls.forEach(wall => {
       this._renderWall(wall)
     })
