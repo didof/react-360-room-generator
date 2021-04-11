@@ -1,5 +1,5 @@
 const defaultDoor = {
-  width: 5,
+  width: 8,
   height: 8,
   distanceFromWallOrigin: null,
 }

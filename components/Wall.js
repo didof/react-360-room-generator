@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppRegistry, View, Box } from 'react-360'
 
-class Wall extends React.Component {
+export default class Wall extends React.Component {
   constructor({ width, depth, height, color }) {
     super()
     this.width = width

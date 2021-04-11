@@ -16,7 +16,7 @@ const defaultCoords = {
 export default class IWall {
   component = 'Wall'
   builderType = 'buildWall'
-  fixtures = null
+  fixture = null
 
   constructor(structure, coords, fixture) {
     if (!structure) structure = defaultStructure
@@ -41,9 +41,9 @@ export default class IWall {
     this.fixture = fixture
   }
 
-  static withDoor(structure, coords, door) {
-    const fixture = new IDoor(door)
+  static withDoor(structure, coords, fixture) {
+    const door = new IDoor(fixture)
 
-    return new IWall(structure, coords, fixture)
+    return new IWall(structure, coords, door)
   }
 }

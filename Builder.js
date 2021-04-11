@@ -38,7 +38,7 @@ class Builder {
     )
   }
 
-  _renderWallSimple(i) {
+  _renderWall(i) {
     const { structure, coords } = i
     let X = coords.x - this.roomWidth / 2 + structure.width / 2
     let Y = coords.y - this.roomDepth / 2 - structure.depth / 2
@@ -57,8 +57,8 @@ class Builder {
   _buildRoomConstraints({ width, depth }) {
     this.floorConstraints = {
       AB: [0, 0],
-      BC: [width, 0],
-      CD: [width, depth],
+      BC: [width, depth],
+      CD: [0, depth],
       DA: [0, depth],
     }
   }
@@ -77,7 +77,7 @@ class Builder {
           break
         default:
           console.error(
-            `[Builder/_buildFloorPerimeter] The ${el.component} is not recognized`
+            `[Builder/_buildFloorPerimeter] The ${elm.component} is not recognized`
           )
       }
     })
@@ -86,17 +86,11 @@ class Builder {
   _calculatePerimeterWallStructure(wall, side) {
     switch (side) {
       case 'AB':
+      case 'CD':
         if (!wall.structure.width) wall.structure.width = this.roomWidth
         if (!wall.structure.depth) wall.structure.depth = this.wallsThickness
         break
       case 'BC':
-        if (!wall.structure.width) wall.structure.width = this.wallsThickness
-        if (!wall.structure.depth) wall.structure.depth = -this.roomDepth
-        break
-      case 'CD':
-        if (!wall.structure.width) wall.structure.width = -this.roomWidth
-        if (!wall.structure.depth) wall.structure.depth = this.wallsThickness
-        break
       case 'DA':
         if (!wall.structure.width) wall.structure.width = this.wallsThickness
         if (!wall.structure.depth) wall.structure.depth = this.roomDepth
@@ -128,7 +122,7 @@ class Builder {
 
   buildWall(i) {
     if (!i.fixture) {
-      this._renderWallSimple(i)
+      this._renderWall(i)
       return
     }
 
@@ -156,14 +150,15 @@ class Builder {
     }
   }
 
-  _buildWallWithDoorEmpty({ structure, coords, fixture }) {
+  _buildWallWithDoorEmpty(i) {
+    const { structure, coords, fixture } = i
+
     let discriminantSize =
       Math.abs(structure.width) > Math.abs(structure.depth) ? 'width' : 'depth'
     let wallSize =
       discriminantSize === 'width'
         ? Math.abs(structure.width)
         : Math.abs(structure.depth)
-
     if (!fixture.distanceFromWallOrigin) {
       fixture.distanceFromWallOrigin = wallSize / 2
     }
@@ -172,32 +167,28 @@ class Builder {
       ...structure,
       [discriminantSize]:
         wallSize - fixture.distanceFromWallOrigin - fixture.width,
-      color: 'blue',
+      color: 'red',
     }
-
-    const w1Coords = coords
-
     const w2Structure = {
       ...structure,
       [discriminantSize]:
-        wallSize - (wallSize - fixture.distanceFromWallOrigin) - fixture.width,
-      color: 'red',
+        wallSize - w1Structure[discriminantSize] - fixture.width,
+      color: 'blue',
     }
 
     const discriminantCoord = discriminantSize === 'width' ? 'x' : 'y'
+    const w1Coords = coords
+
     const w2Coords = {
       ...coords,
-      [discriminantCoord]:
-        wallSize - fixture.distanceFromWallOrigin + fixture.width,
+      [discriminantCoord]: wallSize - w2Structure[discriminantSize],
     }
 
     const w1 = new IWall(w1Structure, w1Coords)
     const w2 = new IWall(w2Structure, w2Coords)
-
     const walls = [w1, w2]
-
     walls.forEach(wall => {
-      this._renderWallSimple(wall)
+      this._renderWall(wall)
     })
   }
 }
