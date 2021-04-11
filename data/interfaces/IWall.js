@@ -41,7 +41,7 @@ export default class IWall {
     this.fixture = fixture
   }
 
-  static withDoor(structure, coords, fixture) {
+  static withDoor(fixture, structure, coords) {
     const door = new IDoor(fixture)
 
     return new IWall(structure, coords, door)

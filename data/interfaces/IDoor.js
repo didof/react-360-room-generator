@@ -1,6 +1,6 @@
 const defaultDoor = {
-  width: 8,
-  height: 8,
+  width: 10,
+  height: 20,
   distanceFromWallOrigin: null,
 }
 
@@ -15,6 +15,12 @@ export default class IDoor {
   } = defaultDoor) {
     this.width = width
     this.height = height
-    this.distanceFromWallOrigin = distanceFromWallOrigin
+
+    if (distanceFromWallOrigin) {
+      console.info(
+        `At the moment the functionality distanceFromWallOrigin is disabled because it generates a bug`
+      )
+    }
+    this.distanceFromWallOrigin = null
   }
 }

@@ -1,22 +1,17 @@
 import { Location } from 'react-360-web'
 import IWall from './data/interfaces/IWall'
 
-const defaultBuilderOptions = {
-  floorLevel: -10,
-}
-
 class Builder {
   floorLevel = -10
   roomWidth = null
   roomDepth = null
   wallsThickness = 1
-  wallsHeight = 15
 
   constructor(r360) {
     this.r = r360
   }
 
-  static buildRoom(r, room, options = defaultBuilderOptions) {
+  static buildRoom(r, room, options) {
     if (options) {
       this.floorLevel = options.floorLevel
     }
@@ -42,7 +37,7 @@ class Builder {
     const { structure, coords } = i
     let X = coords.x - this.roomWidth / 2 + structure.width / 2
     let Y = coords.y - this.roomDepth / 2 - structure.depth / 2
-    let Z = coords.z - this.floorLevel / 2 - structure.height / 2
+    let Z = coords.z + this.floorLevel + structure.height / 2
 
     const location = new Location([X, Z, Y])
 
@@ -100,7 +95,7 @@ class Builder {
           `[Builder/calculatePerimeterWallStructure] The side ${side} is not recognized`
         )
     }
-    wall.structure.height = this.wallsHeight
+    wall.structure.height = -this.floorLevel + 10
   }
 
   _calculatePerimeterWallCoords(wall, side) {
@@ -167,18 +162,15 @@ class Builder {
       ...structure,
       [discriminantSize]:
         wallSize - fixture.distanceFromWallOrigin - fixture.width,
-      color: 'red',
     }
     const w2Structure = {
       ...structure,
       [discriminantSize]:
         wallSize - w1Structure[discriminantSize] - fixture.width,
-      color: 'blue',
     }
 
     const discriminantCoord = discriminantSize === 'width' ? 'x' : 'y'
     const w1Coords = coords
-
     const w2Coords = {
       ...coords,
       [discriminantCoord]: wallSize - w2Structure[discriminantSize],
